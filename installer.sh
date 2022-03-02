@@ -287,10 +287,10 @@ arch_installer(){
     # Install the base packages
     case "$bios_type" in
         "bios" )
-            pacstrap /mnt base base-devel linux-lts linux-lts-headers "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
+            pacstrap /mnt base base-devel linux-lts linux-lts-headers "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager vim xdg-user-dirs ntfs-3g
             ;;
         "uefi" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
+            pacstrap /mnt base base-devel linux-lts linux-lts-headers "$kernel_flavor" "$kernel_flavor"-headers linux-firmware efibootmgr sudo bash-completion networkmanager vim xdg-user-dirs ntfs-3g
             ;;
     esac
     # Generate fstab with UUID
@@ -332,16 +332,8 @@ arch_installer(){
             arch-chroot /mnt /bin/bash -c "pacman -Sy amd-ucode --noconfirm --needed"
             ;;
     esac
-    # Install bootloader
-    case "$bios_type" in
-    "bios" )
-        arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
-        ;;
-    "uefi" )
-        arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
-        ;;
-    esac
-    arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+    # Install bootloader - Install manually using systemd-boot 
+    # Take files form boot and add them to original PopOS EFI boot partition, add entry in entries folder and create folder in /boot/efi/EFI with the kernel, and initramfs image
     # Enable Network Manager
 	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
 	# Set root user password
