@@ -238,7 +238,7 @@ disks(){
 
 # Allow user to select the kernel of their choice
 kernel_selector(){
-    while ! [[ "$kernel_flavor" =~ ^(1|2|3|4)$ ]]
+    while ! [[ "$kernel_flavor" =~ ^(1|2|3)$ ]]
     do
     echo
     echo "4. Kernel Selector"
@@ -246,23 +246,19 @@ kernel_selector(){
     echo "Choose a kernel for your system:"
     echo
     echo "1. linux (the preferred choice for most users)"
-    echo "2. linux-lts (a long-term supported kernel)"
-    echo "3. linux-zen (a performance focused kernel)"
-    echo "4. linux-hardened (a security focused kernel)"
+    echo "2. linux-zen (a performance focused kernel)"
+    echo "3. linux-hardened (a security focused kernel)"
     echo
-    read -p "> Kernel flavor (1-4): " kernel_flavor
+    read -p "> Kernel flavor (1-3): " kernel_flavor
     done
     case "$kernel_flavor" in
         1)
             kernel_flavor="linux"
             ;;
         2)
-            kernel_flavor="linux-lts"
-            ;;
-        3)
             kernel_flavor="linux-zen"
             ;;
-        4)
+        3)
             kernel_flavor="linux-hardened"
             ;;
     esac
@@ -291,7 +287,7 @@ arch_installer(){
     # Install the base packages
     case "$bios_type" in
         "bios" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
+            pacstrap /mnt base base-devel linux-lts linux-lts-headers "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
             ;;
         "uefi" )
             pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
